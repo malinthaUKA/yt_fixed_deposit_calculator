@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:yt_fixed_deposit_calculator/const.dart';
 import 'package:yt_fixed_deposit_calculator/widget/body.dart';
+import 'package:yt_fixed_deposit_calculator/widget/input_form.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,6 +13,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  TextEditingController _controller1 = new TextEditingController();
+  TextEditingController _controller2 = new TextEditingController();
+  TextEditingController _controller3 = new TextEditingController();
+  late double interest = 0;
+  late double total = 0;
+
+  // _controller1.text is Amount
+  // _controller2.text is Interest Rate
+  // _controller3.text is Period
+
+  void calculation() {
+    final calineterestrate = (double.parse(_controller2.text) / 100 / 12) *
+        int.parse(_controller3.text);
+    final calinterest = calineterestrate * int.parse(_controller1.text);
+
+    setState(() {
+      interest = calinterest;
+      total = interest + int.parse(_controller1.text);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -38,6 +60,7 @@ class _HomePageState extends State<HomePage> {
             )
           ],
         ),
+
         // body: MyWidget(),
         body: body(),
       ),
@@ -125,8 +148,104 @@ class _HomePageState extends State<HomePage> {
         SizedBox(
           height: 20,
         ),
-        Column(
-          children: [],
+        Padding(
+          padding: const EdgeInsets.fromLTRB(30, 10, 40, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              inputForm(
+                "Deposit Amount",
+                _controller1,
+                "e.g 20000",
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              inputForm(
+                "Annual Interest Rate(%)",
+                _controller2,
+                "e.g 3",
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              inputForm(
+                "Period(in month)",
+                _controller3,
+                "e.g 3",
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              GestureDetector(
+                onTap: () {
+                  calculation();
+                },
+                child: Container(
+                  height: 60,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "CALCULATE",
+                      style: GoogleFonts.robotoMono(
+                        fontSize: 25,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              interest != null
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Result :-",
+                          style: GoogleFonts.robotoMono(
+                            fontSize: 25,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Center(
+                          child: Text(
+                            "Interest: RS " + interest.toStringAsFixed(2),
+                            style: GoogleFonts.robotoMono(
+                              fontSize: 25,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Center(
+                          child: Text(
+                            "Total: RS " + total.toStringAsFixed(2),
+                            style: GoogleFonts.robotoMono(
+                              fontSize: 25,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : SizedBox()
+            ],
+          ),
         ),
       ],
     );

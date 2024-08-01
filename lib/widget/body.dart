@@ -13,7 +13,7 @@ class _MyWidgetState extends State<MyWidget> {
   void initState() {
     super.initState();
     // Trigger the animation after a short delay
-    Future.delayed(Duration(milliseconds: 50), () {
+    Future.delayed(Duration(milliseconds: 100), () {
       setState(() {
         _isExpanded = true;
       });
